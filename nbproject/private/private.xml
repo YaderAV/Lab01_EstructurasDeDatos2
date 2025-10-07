@@ -3,9 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatps2/src/Main/Main.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatps2/src/Models/MotorPreguntas.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatps2/src/Models/Juego.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Main/Main.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/Juego.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/resources/ecosistemas.json</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/SceneManager.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/CyberSecurityScene.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/MenuScene.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,0 +1,12 @@
+[
+  {
+    "pregunta": "¿Cuál es el principal gas causante del efecto invernadero?",
+    "opciones": ["a) Oxígeno", "b) CO2", "c) Nitrógeno"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué acción ayuda más a reducir la huella de carbono?",
+    "opciones": ["a) Usar bicicleta", "b) Comprar plástico", "c) Dejar luces encendidas"],
+    "respuesta": "a"
+  }
+]

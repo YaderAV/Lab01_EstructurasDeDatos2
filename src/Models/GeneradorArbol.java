@@ -13,26 +13,24 @@ import java.util.Random;
  */
 public class GeneradorArbol {
 
-    private BancoEcosistemas ecosistemas;
+    private BancoNodos ecosistemas;
     private Arbol arbol;
     private Random random = new Random();
 
-    public Ecosistema construirArbol(List<Ecosistema> ecosistemas) {
-        if (ecosistemas.isEmpty()) {
+    public Nodo construirArbol(List<Nodo> ecosistemas) {
+        if (ecosistemas == null || ecosistemas.isEmpty()) {
             return null;
         }
 
-        // Tomamos el primero como raíz
-        Ecosistema raiz = new Ecosistema(ecosistemas.get(0).getEcosistema());
-        // Insertamos el resto aleatoriamente
+        Nodo raiz = new Nodo(ecosistemas.get(0).getNodo());
         for (int i = 1; i < ecosistemas.size(); i++) {
-            insertar(raiz, new Ecosistema(ecosistemas.get(i).getEcosistema()));
+            insertar(raiz, new Nodo(ecosistemas.get(i).getNodo()));
         }
 
         return raiz;
     }
 
-    private void insertar(Ecosistema actual, Ecosistema nuevo) {
+    private void insertar(Nodo actual, Nodo nuevo) {
         // Aleatoriamente decide izquierda o derecha
 
         // Si el árbol está vacío (caso base)
@@ -46,6 +44,7 @@ public class GeneradorArbol {
             // Insertar a la izquierda
             if (actual.getIzquierda() == null) {
                 actual.setIzquierda(nuevo);
+                nuevo.setPadre(actual);
             } else {
                 insertar(actual.getIzquierda(), nuevo);
             }
@@ -53,6 +52,7 @@ public class GeneradorArbol {
             // Insertar a la derecha
             if (actual.getDerecha() == null) {
                 actual.setDerecha(nuevo);
+                nuevo.setPadre(actual);
             } else {
                 insertar(actual.getDerecha(), nuevo);
             }

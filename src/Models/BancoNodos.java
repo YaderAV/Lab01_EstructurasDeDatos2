@@ -15,14 +15,14 @@ import java.util.List;
  *
  * @author A. Vega
  */
-public class BancoEcosistemas {
+public class BancoNodos {
 
-    List<Ecosistema> ecosistemas;
+    List<Nodo> nodos;
 
-    public BancoEcosistemas(String nombreArchivo) {
+    public BancoNodos(String nombreArchivo) {
         try {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<Ecosistema>>() {
+            Type listType = new TypeToken<List<Nodo>>() {
             }.getType();
 
             // Cargar archivo desde resources
@@ -32,7 +32,7 @@ public class BancoEcosistemas {
             }
 
             InputStreamReader reader = new InputStreamReader(input);
-            ecosistemas = gson.fromJson(reader, listType);
+            nodos = gson.fromJson(reader, listType);
             reader.close();
 
         } catch (Exception e) {
@@ -40,16 +40,10 @@ public class BancoEcosistemas {
         }
     }
 
-    public Ecosistema obtenerEcosistemaAleatorio() {
-        if (ecosistemas == null || ecosistemas.isEmpty()) {
-            throw new IllegalStateException("No hay preguntas disponibles. Revisa el JSON.");
-        }
-        int idx = (int) (Math.random() * ecosistemas.size());
-        return ecosistemas.get(idx);
+    public List<Nodo> getNodos() {
+        return nodos;
     }
-
-    public List<Ecosistema> getEcosistemas() {
-        return ecosistemas;
-    }
+    
+    
 
 }

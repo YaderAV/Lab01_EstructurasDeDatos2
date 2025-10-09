@@ -1,12 +1,82 @@
 [
   {
-    "pregunta": "¿Cuál es el principal gas causante del efecto invernadero?",
-    "opciones": ["a) Oxígeno", "b) CO2", "c) Nitrógeno"],
+    "pregunta": "¿Cuál es el principal objetivo de un firewall en una red?",
+    "opciones": ["a) Acelerar la conexión a Internet", "b) Filtrar tráfico no autorizado", "c) Hacer copias de seguridad"],
     "respuesta": "b"
   },
   {
-    "pregunta": "¿Qué acción ayuda más a reducir la huella de carbono?",
-    "opciones": ["a) Usar bicicleta", "b) Comprar plástico", "c) Dejar luces encendidas"],
+    "pregunta": "¿Qué tipo de ataque busca engañar al usuario para que revele información personal?",
+    "opciones": ["a) Phishing", "b) DDoS", "c) Spoofing"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Cuál es una buena práctica para crear contraseñas seguras?",
+    "opciones": ["a) Usar fechas de nacimiento", "b) Usar contraseñas largas y únicas", "c) Compartirlas con compañeros"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué debes hacer si recibes un correo sospechoso con un enlace desconocido?",
+    "opciones": ["a) Ignorarlo o reportarlo al área de TI", "b) Hacer clic para ver de qué se trata", "c) Reenviarlo a tus contactos"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué es un ataque de ransomware?",
+    "opciones": ["a) Robo de contraseñas", "b) Secuestro de archivos para pedir rescate", "c) Acceso remoto autorizado"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué protocolo se considera más seguro para sitios web?",
+    "opciones": ["a) HTTP", "b) HTTPS", "c) FTP"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué herramienta se usa comúnmente para detectar virus en un sistema?",
+    "opciones": ["a) Navegador web", "b) Antivirus", "c) Procesador de texto"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué significa el término 'phishing'?",
+    "opciones": ["a) Uso de contraseñas seguras", "b) Suplantación de identidad para obtener datos", "c) Análisis de redes inalámbricas"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Cuál de las siguientes opciones representa una autenticación de múltiples factores (MFA)?",
+    "opciones": ["a) Solo usuario y contraseña", "b) Contraseña y código enviado al móvil", "c) Solo un PIN corto"],
+    "respuesta": "b"
+  },
+  {
+    "pregunta": "¿Qué acción ayuda a proteger los datos en caso de ataque o pérdida?",
+    "opciones": ["a) Hacer copias de seguridad periódicas", "b) Desactivar el antivirus", "c) Compartir la contraseña con el equipo"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué tipo de malware registra las pulsaciones del teclado?",
+    "opciones": ["a) Keylogger", "b) Worm", "c) Rootkit"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué debes evitar al usar redes Wi-Fi públicas?",
+    "opciones": ["a) Acceder a cuentas bancarias o sensibles", "b) Navegar por sitios públicos", "c) Ver noticias"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué representa el 'Ingeniería Social' en ciberseguridad?",
+    "opciones": ["a) Manipular personas para obtener información", "b) Atacar servidores directamente", "c) Probar vulnerabilidades con herramientas"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Cuál es una medida para evitar infecciones por malware?",
+    "opciones": ["a) Instalar software solo de fuentes confiables", "b) Abrir archivos desconocidos", "c) Desactivar el firewall"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué indica un candado en la barra de direcciones del navegador?",
+    "opciones": ["a) Que el sitio usa una conexión segura (HTTPS)", "b) Que el sitio tiene publicidad", "c) Que el sitio guarda cookies"],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "¿Qué tipo de ataque busca sobrecargar un servidor con múltiples peticiones?",
+    "opciones": ["a) DDoS", "b) SQL Injection", "c) Spoofing"],
     "respuesta": "a"
   }
 ]

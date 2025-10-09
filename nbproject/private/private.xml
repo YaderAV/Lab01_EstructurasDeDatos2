@@ -5,12 +5,16 @@
         <group>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Main/Main.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/Juego.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/resources/ecosistemas.json</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/resources/nodos.json</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/SceneManager.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/CyberSecurityScene.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Visuals/MenuScene.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/BancoEcosistemas.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/Arbol.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/Nodo.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/resources/preguntas.json</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/Pregunta.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Lab01_EstructurasDeDatos2/src/Models/GeneradorArbol.java</file>
         </group>
     </open-files>
 </project-private>

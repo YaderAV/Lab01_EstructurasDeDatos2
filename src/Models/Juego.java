@@ -11,10 +11,10 @@ import javax.swing.JOptionPane;
  * @author A. Vega
  */
 public class Juego {
-    private Ecosistema actual;
+    private Nodo actual;
      private MotorPreguntas motor;
 
-    public Juego(Ecosistema raiz, MotorPreguntas motor) {
+    public Juego(Nodo raiz, MotorPreguntas motor) {
         this.actual = raiz;
         this.motor = motor;
     }
@@ -24,10 +24,10 @@ public class Juego {
 
         while (true) {
             // Mensaje del ecosistema
-            JOptionPane.showMessageDialog(null, "Estás en: " + actual.getEcosistema());
+            JOptionPane.showMessageDialog(null, "Estás en: " + actual.getNodo());
 
             // Si ya es nodo de sostenibilidad → victoria
-            if (actual.getEcosistema().equals("Nodo de Sostenibilidad")) {
+            if (actual.getNodo().equals("Nodo de Sostenibilidad")) {
                 JOptionPane.showMessageDialog(null,
                         "¡Felicitaciones! Has aprendido sobre el cambio climático y cómo ayudar a salvar el planeta.");
                 break;

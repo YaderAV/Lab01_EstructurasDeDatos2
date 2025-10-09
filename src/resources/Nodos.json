@@ -1,0 +1,18 @@
+[
+  { "nodo": "Firewall Perimetral" },
+  { "nodo": "Servidor de Correo" },
+  { "nodo": "Servidor Comprometido" },
+  { "nodo": "Base de Datos Interna" },
+  { "nodo": "Terminal de Administración" },
+  { "nodo": "Red Infiltrada" },
+  { "nodo": "Estación de Monitoreo" },
+  { "nodo": "Servidor de Respaldo" },
+  { "nodo": "Puerta de Enlace VPN" },
+  { "nodo": "Dispositivo IoT Comprometido" },
+  { "nodo": "Firewall de Aplicación Web" },
+  { "nodo": "Servidor DNS" },
+  { "nodo": "Nodo Comprometido" },
+  { "nodo": "Estación de Seguridad" },
+  { "nodo": "Centro de Datos" },
+  { "nodo": "Nodo Central Seguro" }
+]

@@ -1,32 +1,34 @@
-
 package Models;
 
-import Models.Nodo;
-
 public class Arbol {
+
     private Nodo raiz;
 
-    public Arbol() {
-        this.raiz = null; 
+    public Arbol(Nodo raiz) {
+        this.raiz = raiz;
     }
-    
-    public void imprimirArbol (Nodo nodo, String prefijo){
+
+    public void imprimirArbol(Nodo nodo, String prefijo) {
         if (nodo == null) {
-        return;
-    }
+            return;
+        }
 
-    // Imprime el nodo actual con indentación
-    System.out.println(prefijo + "• " + nodo.getNodo());
+        // Imprime el nodo actual con indentación
+        System.out.println(prefijo + "• " + nodo.getNodo());
 
-    // Llama recursivamente aumentando la sangría
-    imprimirArbol(nodo.getIzquierda(), prefijo + "   ");
-    imprimirArbol(nodo.getDerecha(), prefijo + "   ");
+        // Llama recursivamente aumentando la sangría
+        imprimirArbol(nodo.getIzquierda(), prefijo + "   ");
+        imprimirArbol(nodo.getDerecha(), prefijo + "   ");
     }
 
     public Nodo getRaiz() {
         return raiz;
     }
-    
-    
+
+    public boolean ultimoNivelLleno() {
+        boolean lleno = false;
+
+        return lleno;
+    }
+
 }
-    

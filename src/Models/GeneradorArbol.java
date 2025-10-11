@@ -12,22 +12,21 @@ import java.util.Random;
  * @author A. Vega
  */
 public class GeneradorArbol {
-
-    private BancoNodos ecosistemas;
-    private Arbol arbol;
+    
     private Random random = new Random();
-
-    public Nodo construirArbol(List<Nodo> ecosistemas) {
+    private Arbol arbol;
+    public Arbol construirArbol(List<Nodo> ecosistemas) {
         if (ecosistemas == null || ecosistemas.isEmpty()) {
             return null;
         }
-
+        //Recorre la lista, el nodo raíz siempre es el mismo. 
         Nodo raiz = new Nodo(ecosistemas.get(0).getNodo());
+        arbol = new Arbol(raiz);
         for (int i = 1; i < ecosistemas.size(); i++) {
-            insertar(raiz, new Nodo(ecosistemas.get(i).getNodo()));
+            insertar(raiz, new Nodo(ecosistemas.get(i).getNodo())); // llamado recursivo para ubicar los nodos
         }
 
-        return raiz;
+        return arbol; 
     }
 
     private void insertar(Nodo actual, Nodo nuevo) {
@@ -38,13 +37,12 @@ public class GeneradorArbol {
             actual = nuevo;
             return;
         }
-
         // Decide aleatoriamente izquierda o derecha
         if (random.nextBoolean()) {
             // Insertar a la izquierda
             if (actual.getIzquierda() == null) {
                 actual.setIzquierda(nuevo);
-                nuevo.setPadre(actual);
+                nuevo.setPadre(actual); // asignamos cual es su nodo padre para saber a donde volver. 
             } else {
                 insertar(actual.getIzquierda(), nuevo);
             }

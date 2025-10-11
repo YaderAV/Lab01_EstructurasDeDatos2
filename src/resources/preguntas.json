@@ -1,82 +1,137 @@
 [
   {
-    "pregunta": "¿Cuál es el principal objetivo de un firewall en una red?",
-    "opciones": ["a) Acelerar la conexión a Internet", "b) Filtrar tráfico no autorizado", "c) Hacer copias de seguridad"],
+    "pregunta": "El sistema de correo ha comenzado a enviar mensajes masivos sin autorización. Sospechas que un script malicioso está activo. ¿Qué haces primero?",
+    "opciones": [
+      "a) Desconectas el servidor de la red para aislar la infección",
+      "b) Envías un mensaje de advertencia a todos los usuarios",
+      "c) Reinicias el servidor para intentar detener los envíos"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Detectas un proceso desconocido consumiendo gran parte de los recursos del servidor central. El equipo de monitoreo no responde. ¿Cuál es tu acción inmediata?",
+    "opciones": [
+      "a) Terminas el proceso sin revisar su origen",
+      "b) Analizas el proceso con herramientas forenses antes de actuar",
+      "c) Ignoras la alerta, podría ser un falso positivo"
+    ],
     "respuesta": "b"
   },
   {
-    "pregunta": "¿Qué tipo de ataque busca engañar al usuario para que revele información personal?",
-    "opciones": ["a) Phishing", "b) DDoS", "c) Spoofing"],
+    "pregunta": "Un usuario reporta que su cuenta fue bloqueada tras recibir un correo sospechoso. Al revisar, ves múltiples intentos fallidos de inicio de sesión. ¿Cómo respondes?",
+    "opciones": [
+      "a) Restableces la contraseña e investigas el origen de los intentos",
+      "b) Borras la cuenta afectada para evitar riesgos",
+      "c) Desactivas todo el sistema de autenticación temporalmente"
+    ],
     "respuesta": "a"
   },
   {
-    "pregunta": "¿Cuál es una buena práctica para crear contraseñas seguras?",
-    "opciones": ["a) Usar fechas de nacimiento", "b) Usar contraseñas largas y únicas", "c) Compartirlas con compañeros"],
+    "pregunta": "Tu sistema de respaldo muestra discrepancias en los archivos críticos. El atacante podría haberlos modificado. ¿Qué acción tomas?",
+    "opciones": [
+      "a) Restauras desde el respaldo más reciente verificado",
+      "b) Editas manualmente los archivos afectados",
+      "c) Ignoras el problema hasta verificar con el atacante"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Los monitores de tráfico muestran un flujo de datos saliendo hacia una dirección desconocida en el extranjero. ¿Cómo actúas?",
+    "opciones": [
+      "a) Cierro temporalmente el puerto de salida y analizo los logs",
+      "b) Espero a confirmar si es un servicio legítimo",
+      "c) Reinicio los routers para reiniciar la conexión"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Un ransomware ha cifrado varias unidades compartidas. El atacante exige un pago. ¿Cuál es la mejor respuesta?",
+    "opciones": [
+      "a) Aislar los equipos infectados y restaurar desde copias de seguridad",
+      "b) Negociar con el atacante para recuperar el acceso",
+      "c) Reiniciar todos los servidores comprometidos inmediatamente"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Durante un análisis, descubres un usuario con privilegios administrativos creado hace pocas horas. ¿Qué haces?",
+    "opciones": [
+      "a) Desactivas la cuenta sospechosa y revisas sus registros de actividad",
+      "b) Cambias todas las contraseñas del sistema sin investigar",
+      "c) Borras el usuario y sigues con tus tareas"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Un malware detectado en una estación de trabajo intenta comunicarse con un servidor remoto. ¿Qué medida tomas?",
+    "opciones": [
+      "a) Desconecto la estación y analizo el tráfico de red saliente",
+      "b) Cierro la sesión del usuario afectado",
+      "c) Apago el equipo y lo dejo desconectado indefinidamente"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Los registros del firewall muestran intentos continuos de acceso desde múltiples IP. El sistema aún no ha sido comprometido. ¿Qué haces?",
+    "opciones": [
+      "a) Implementas una lista de bloqueo y refuerzas autenticaciones",
+      "b) Apagas el firewall para verificar la fuente real del tráfico",
+      "c) Ignoras los intentos hasta ver un daño concreto"
+    ],
+    "respuesta": "a"
+  },
+  {
+    "pregunta": "Recibes un aviso de actualización urgente para tu software de seguridad. El remitente no es oficial, pero incluye un enlace directo. ¿Qué decides hacer?",
+    "opciones": [
+      "a) Descargas e instalas el parche inmediatamente",
+      "b) Verificas la autenticidad del mensaje y descargas desde el sitio oficial",
+      "c) Ignoras el aviso, probablemente sea falso"
+    ],
     "respuesta": "b"
   },
   {
-    "pregunta": "¿Qué debes hacer si recibes un correo sospechoso con un enlace desconocido?",
-    "opciones": ["a) Ignorarlo o reportarlo al área de TI", "b) Hacer clic para ver de qué se trata", "c) Reenviarlo a tus contactos"],
+    "pregunta": "Uno de los servidores críticos muestra picos de CPU justo después de las 3 a.m. cada día. No hay tareas programadas. ¿Cómo actúas?",
+    "opciones": [
+      "a) Revisas los logs y programas tareas de auditoría en esa franja horaria",
+      "b) Reinicias el servidor cada madrugada para evitar el pico",
+      "c) Aumentas los recursos del servidor sin investigar"
+    ],
     "respuesta": "a"
   },
   {
-    "pregunta": "¿Qué es un ataque de ransomware?",
-    "opciones": ["a) Robo de contraseñas", "b) Secuestro de archivos para pedir rescate", "c) Acceso remoto autorizado"],
-    "respuesta": "b"
-  },
-  {
-    "pregunta": "¿Qué protocolo se considera más seguro para sitios web?",
-    "opciones": ["a) HTTP", "b) HTTPS", "c) FTP"],
-    "respuesta": "b"
-  },
-  {
-    "pregunta": "¿Qué herramienta se usa comúnmente para detectar virus en un sistema?",
-    "opciones": ["a) Navegador web", "b) Antivirus", "c) Procesador de texto"],
-    "respuesta": "b"
-  },
-  {
-    "pregunta": "¿Qué significa el término 'phishing'?",
-    "opciones": ["a) Uso de contraseñas seguras", "b) Suplantación de identidad para obtener datos", "c) Análisis de redes inalámbricas"],
-    "respuesta": "b"
-  },
-  {
-    "pregunta": "¿Cuál de las siguientes opciones representa una autenticación de múltiples factores (MFA)?",
-    "opciones": ["a) Solo usuario y contraseña", "b) Contraseña y código enviado al móvil", "c) Solo un PIN corto"],
-    "respuesta": "b"
-  },
-  {
-    "pregunta": "¿Qué acción ayuda a proteger los datos en caso de ataque o pérdida?",
-    "opciones": ["a) Hacer copias de seguridad periódicas", "b) Desactivar el antivirus", "c) Compartir la contraseña con el equipo"],
+    "pregunta": "Una alerta indica que un archivo ejecutable desconocido se está copiando en múltiples unidades USB. ¿Qué haces?",
+    "opciones": [
+      "a) Deshabilitas los puertos USB y analizas el archivo sospechoso",
+      "b) Borras los dispositivos USB conectados",
+      "c) Esperas a ver si el antivirus lo elimina solo"
+    ],
     "respuesta": "a"
   },
   {
-    "pregunta": "¿Qué tipo de malware registra las pulsaciones del teclado?",
-    "opciones": ["a) Keylogger", "b) Worm", "c) Rootkit"],
+    "pregunta": "Tu red interna está mostrando comportamiento errático tras conectar un nuevo dispositivo IoT no registrado. ¿Qué decides?",
+    "opciones": [
+      "a) Aislas el dispositivo y verificas sus permisos de red",
+      "b) Desconectas toda la red interna para reiniciar los servicios",
+      "c) Ignoras el problema, podría ser interferencia temporal"
+    ],
     "respuesta": "a"
   },
   {
-    "pregunta": "¿Qué debes evitar al usar redes Wi-Fi públicas?",
-    "opciones": ["a) Acceder a cuentas bancarias o sensibles", "b) Navegar por sitios públicos", "c) Ver noticias"],
+    "pregunta": "Durante la restauración del sistema, un compañero propone desactivar temporalmente el antivirus porque 'interfiere con la instalación'. ¿Cómo respondes?",
+    "opciones": [
+      "a) Le explicas que nunca debe desactivarse la protección durante un ataque",
+      "b) Aceptas desactivarlo por unos minutos",
+      "c) Ignoras la recomendación y continúas sin discutir"
+    ],
     "respuesta": "a"
   },
   {
-    "pregunta": "¿Qué representa el 'Ingeniería Social' en ciberseguridad?",
-    "opciones": ["a) Manipular personas para obtener información", "b) Atacar servidores directamente", "c) Probar vulnerabilidades con herramientas"],
-    "respuesta": "a"
-  },
-  {
-    "pregunta": "¿Cuál es una medida para evitar infecciones por malware?",
-    "opciones": ["a) Instalar software solo de fuentes confiables", "b) Abrir archivos desconocidos", "c) Desactivar el firewall"],
-    "respuesta": "a"
-  },
-  {
-    "pregunta": "¿Qué indica un candado en la barra de direcciones del navegador?",
-    "opciones": ["a) Que el sitio usa una conexión segura (HTTPS)", "b) Que el sitio tiene publicidad", "c) Que el sitio guarda cookies"],
-    "respuesta": "a"
-  },
-  {
-    "pregunta": "¿Qué tipo de ataque busca sobrecargar un servidor con múltiples peticiones?",
-    "opciones": ["a) DDoS", "b) SQL Injection", "c) Spoofing"],
+    "pregunta": "Tras estabilizar varios nodos, detectas un último servidor que no responde y parece controlado externamente. ¿Qué haces?",
+    "opciones": [
+      "a) Cortas su conexión y ejecutas un protocolo de contención forense",
+      "b) Reinicias el servidor esperando recuperar el control",
+      "c) Esperas a que el atacante abandone la sesión"
+    ],
     "respuesta": "a"
   }
 ]

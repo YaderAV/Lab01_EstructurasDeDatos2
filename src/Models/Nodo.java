@@ -5,11 +5,21 @@ public class Nodo {
     private Nodo izquierda; 
     private Nodo derecha; 
     private Nodo padre; 
+    private int nivel;
     private final String nodo; 
 
     public Nodo(String nombre) {
         this.nodo = nombre;
         this.padre = null;
+        this.nivel = 0;
+    }
+    
+    public int calcularNivel(){
+        return Math.max(izquierda.getNivelNodo(), derecha.getNivelNodo())+1;
+    }
+    
+    public int getNivelNodo(){
+        return nivel;
     }
 
     public Nodo getIzquierda() {

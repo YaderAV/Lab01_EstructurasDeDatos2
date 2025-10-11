@@ -4,7 +4,8 @@
  */
 package Main;
 
-import Visuals.EscenaPrincipal;
+import Visuals.EscenaAboutUs;
+import Visuals.EscenaAjustes;
 import Visuals.EscenaMenu;
 import Visuals.SceneManager;
 import javafx.application.Application;
@@ -18,19 +19,21 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-public void start(Stage stage) {
-    SceneManager.setStage(stage);
+    public void start(Stage stage) {
+        SceneManager.setStage(stage);
 
-    Scene menu = EscenaMenu.crearEscena();
-    Scene juego = new EscenaPrincipal().crearEscena();
+        Scene menu = EscenaMenu.crearEscena();
+        Scene about = EscenaAboutUs.crearEscena();
+        Scene settings = EscenaAjustes.crearEscena();
 
-    SceneManager.addScene("menu", menu);
-    SceneManager.addScene("juego", juego);
+        SceneManager.addScene("menu", menu);
+        SceneManager.addScene("about", about);
+        SceneManager.addScene("settings", settings);
 
-    SceneManager.show("menu");
-    stage.setTitle("Aventura Cibernética");
-    stage.show();
-}
+        SceneManager.show("menu");
+        stage.setTitle("Aventura Cibernética");
+        stage.show();
+    }
 
     public static void main(String[] args) {
         launch(args);

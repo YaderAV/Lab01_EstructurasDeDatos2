@@ -34,7 +34,6 @@ import javafx.util.Duration;
  */
 public class EscenaMenu {
 
-    
     private static final String FONT_FAMILY = "Consolas";
     private static final String THEME_COLOR = "#00b8ff"; // Un cian brillante
     private static final Color THEME_COLOR_PAINT = Color.web(THEME_COLOR);
@@ -57,7 +56,7 @@ public class EscenaMenu {
         // --- SECCIÓN DERECHA (para el reloj funcional) ---
         HBox rightSection = new HBox();
         rightSection.setAlignment(Pos.TOP_RIGHT);
-        
+
         final Text clockText = new Text(); // Creamos el nodo de texto para el reloj
         clockText.setFont(Font.font(FONT_FAMILY, 24));
         clockText.setFill(THEME_COLOR_PAINT);
@@ -67,7 +66,7 @@ public class EscenaMenu {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); // Formato con segundos
             clockText.setText(LocalTime.now().format(formatter));
         }), new KeyFrame(Duration.seconds(1)));
-        
+
         clockTimeline.setCycleCount(Animation.INDEFINITE);
         clockTimeline.play();
 
@@ -76,7 +75,6 @@ public class EscenaMenu {
 
         return new Scene(root, 1280, 720);
     }
-
 
     /**
      * Crea el panel del menú principal
@@ -95,25 +93,31 @@ public class EscenaMenu {
         Button btnMonitor = createMenuButton("INICIAR SISTEMA", FontAwesomeIcon.DESKTOP);
         Button btnSettings = createMenuButton("SETTINGS", FontAwesomeIcon.SLIDERS);
         Button btnShutdown = createMenuButton("SHUTDOWN", FontAwesomeIcon.POWER_OFF);
-        
-        btnMonitor.setOnAction(e-> SceneManager.show("juego"));
-        btnShutdown.setOnAction(e-> {
+
+        btnMonitor.setOnAction(e -> {
+            Scene juego = new EscenaPrincipal().crearEscena();
+            SceneManager.addScene("juego", juego);
+            SceneManager.show("juego");
+        });
+        btnAdmin.setOnAction(e -> SceneManager.show("about"));
+        btnSettings.setOnAction(e -> SceneManager.show("settings"));
+        btnShutdown.setOnAction(e -> {
             Stage stage = SceneManager.getStage();
-            if (stage !=null) {
+            if (stage != null) {
                 stage.close();
             }
         });
 
         panel.getChildren().addAll(startLabel, btnAdmin, btnMonitor, btnSettings, btnShutdown);
         applyPanelStyle(panel);
-        
+
         return panel;
     }
 
     /**
      * Crea el panel lateral con íconos grandes
      */
-     private static VBox createSideIconsPanel() {
+    private static VBox createSideIconsPanel() {
         VBox panel = new VBox(20);
         panel.setAlignment(Pos.CENTER);
         panel.setPadding(new Insets(20));
@@ -129,10 +133,10 @@ public class EscenaMenu {
 
         VBox dateBox = new VBox(5, calendarButton, dateText);
         dateBox.setAlignment(Pos.CENTER);
-        
+
         panel.getChildren().addAll(dateBox, wifiButton, settingsButton1);
         return panel;
-     }
+    }
 
     /**
      * Helper para crear un botón del menú con ícono y texto
@@ -149,7 +153,7 @@ public class EscenaMenu {
         button.setGraphicTextGap(15);
         button.setMaxWidth(Double.MAX_VALUE);
         button.setFont(Font.font(FONT_FAMILY, 18));
-        
+
         String style = """
             -fx-background-color: transparent;
             -fx-text-fill: %s;
@@ -160,11 +164,11 @@ public class EscenaMenu {
         """.formatted(THEME_COLOR);
 
         String hoverStyle = style + "-fx-background-color: rgba(0, 184, 255, 0.2); -fx-border-color: %s;".formatted(THEME_COLOR);
-        
+
         button.setStyle(style);
         button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
         button.setOnMouseExited(e -> button.setStyle(style));
-        
+
         return button;
     }
 
@@ -178,7 +182,7 @@ public class EscenaMenu {
 
         Button button = new Button();
         button.setGraphic(iconView);
-        
+
         String style = """
             -fx-background-color: rgba(10, 40, 50, 0.5);
             -fx-border-color: %s;
@@ -189,7 +193,7 @@ public class EscenaMenu {
             -fx-cursor: hand;
         """.formatted(THEME_COLOR);
         String hoverStyle = style + "-fx-effect: dropshadow(gaussian, %s, 20, 0.6, 0, 0);".formatted(THEME_COLOR);
-        
+
         button.setStyle(style);
         button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
         button.setOnMouseExited(e -> button.setStyle(style));

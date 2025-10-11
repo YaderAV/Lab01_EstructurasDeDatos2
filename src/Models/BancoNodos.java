@@ -23,16 +23,21 @@ public class BancoNodos {
         try {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Nodo>>() {
-            }.getType();
+            }.getType(); /* se guarda el tipo de la lista para que posteriormente 
+            la liberia sea capaz de reconocer el tipo de objeto que quiere guardar 
+            e identifique todos sus atributos*/
 
-            // Cargar archivo desde resources
+            // Cargar archivo desde la ruta enviada desde la llamada del método
            InputStream input = getClass().getClassLoader().getResourceAsStream(nombreArchivo);
+           /* traducimos la secuencia de bytes del json a texto para que sea legible por la libreria*/
             if (input == null) {
                 throw new IllegalArgumentException("Archivo no encontrado: " + nombreArchivo);
             }
-
-            InputStreamReader reader = new InputStreamReader(input);
-            nodos = gson.fromJson(reader, listType);
+            
+            InputStreamReader reader = new InputStreamReader(input); /* le pasamos la secuencia de carácteres
+            al reader para que los interprete*/
+            nodos = gson.fromJson(reader, listType); /*guardamos en la lista de nodos la información de los objetos 
+            obtenida desde el archivo*/
             reader.close();
 
         } catch (Exception e) {

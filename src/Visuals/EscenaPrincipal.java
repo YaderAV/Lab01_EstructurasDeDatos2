@@ -4,25 +4,35 @@
  */
 package Visuals;
 
+import Models.Arbol;
 import Models.BancoNodos;
 import Models.BancoPreguntas;
 import Models.GeneradorArbol;
 import Models.Nodo;
 import Models.Pregunta;
-import java.io.FileInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -32,13 +42,13 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.AudioClip;
+import javafx.util.Duration;
 
 /**
  *
@@ -49,14 +59,26 @@ public class EscenaPrincipal {
     private TextArea consola;
     private TextField input;
     private Canvas miniMapa;
+    private StackPane miniWrapper;
     private GraphicsContext gc;
 
+    // cantidad máxima de líneas visibles antes de limpiar
+    private static final int lineasMaximasConsola = 19;
+    private static final int BUFFER_LINEAS_RECIENTES = 10; // Líneas a conservar tras limpiar
+
     // Lógica del juego
+    private final Queue<String> colaMensajes = new LinkedList<>();
+    private boolean escribiendo = false;
     private BancoPreguntas bancoPreguntas;
     private BancoNodos bancoN;
-    private Nodo raiz;
+    private Arbol arbol;
     private Nodo actual;
     private Pregunta preguntaActual;
+    private boolean juegoIniciado = false;
+    private ScrollBar verticalScrollBar;
+
+    // Sonido de tecleo
+    private AudioClip typeSound;
 
     // Mapa de posiciones para dibujar mini-mapa
     private Map<Nodo, Point2D> nodePositions = new HashMap<>();
@@ -73,12 +95,19 @@ public class EscenaPrincipal {
         consola.setEditable(false);
         consola.setWrapText(true);
         consola.setFont(Font.font("Consolas", 14));
+        consola.setScrollTop(Double.MAX_VALUE);
+        consola.setPrefRowCount(10);
         consola.setStyle("""
-        -fx-control-inner-background: #0A0A0A;
-        -fx-text-fill: #00FF66;
-        -fx-background-color: transparent;
-        -fx-border-color: transparent;
-    """);
+    -fx-control-inner-background: #0A0A0A;
+    -fx-text-fill: #00FF66;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+""");
+        consola.textProperty().addListener((obs, oldVal, newVal)
+                -> consola.setScrollTop(Double.MAX_VALUE)
+        );
 
         input = new TextField();
         input.setPromptText(">");
@@ -104,10 +133,11 @@ public class EscenaPrincipal {
 
         miniMapa = new Canvas(canvasWidth, canvasHeight);
         gc = miniMapa.getGraphicsContext2D();
-        StackPane miniWrapper = new StackPane(miniMapa);
+        miniWrapper = new StackPane(miniMapa);
         miniWrapper.setPadding(new Insets(8));
         miniWrapper.setLayoutX(canvasWidth);
         miniWrapper.setLayoutY(canvasWidth);
+        miniWrapper.setVisible(false);
 
         miniWrapper.setStyle("""
         -fx-border-color: #00FF66;
@@ -123,11 +153,10 @@ public class EscenaPrincipal {
 
         // --- Ventana de la consola ---
         BorderPane consoleWindow = new BorderPane();
-        consoleWindow.setMaxSize(600, 450);
+        consoleWindow.setMaxSize(700, 550);
         consoleWindow.setStyle("""
         -fx-background-color: rgba(10, 10, 10, 0.9);
-        -fx-border-color: #00FF66;
-        -fx-border-width: 1;
+        -fx-border-width: 10;
         -fx-background-radius: 8;
         -fx-border-radius: 8;
         -fx-effect: dropshadow(gaussian, #00FF66, 10, 0.3, 0, 0);
@@ -142,34 +171,56 @@ public class EscenaPrincipal {
         titleBar.setAlignment(Pos.CENTER_LEFT);
         titleBar.setPadding(new Insets(5, 10, 5, 10));
         titleBar.setStyle("-fx-background-color: #1E1E1E;");
-        
+
         consoleWindow.setBottom(input);
         consoleWindow.setTop(titleBar);
-        consoleWindow.setCenter(consola);   
-        
-        consoleWindow.setOnMouseClicked(e -> consola.requestFocus());
+        consoleWindow.setCenter(consola);
 
+        consoleWindow.setOnMouseClicked(e -> consola.requestFocus());
 
         // --- Contenedor raíz ---
         StackPane root = new StackPane();
 
         // --- Ensamblar escena ---
-        root.getChildren().addAll( consoleWindow, miniWrapper);
+        root.getChildren().addAll(consoleWindow, miniWrapper);
         StackPane.setAlignment(consoleWindow, Pos.CENTER);
         StackPane.setAlignment(miniWrapper, Pos.TOP_RIGHT);
-        StackPane.setMargin(miniWrapper, new Insets(20));
+        StackPane.setMargin(miniWrapper, new Insets(2));
+
+        // --- Cargar sonido ---
+        try {
+            URL soundUrl = getClass().getResource("/resources/type.wav"); // desde src/resources
+            if (soundUrl != null) {
+                typeSound = new AudioClip(soundUrl.toString());
+                typeSound.setVolume(0.05);
+            } else {
+                System.out.println("No se encontró el archivo type.wav");
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar el sonido de tecleo: " + e.getMessage());
+        }
 
         // --- Cargar imagen de fondo tipo escritorio ---
         try {
-            Image backgroundImg = new Image(new FileInputStream("C:\\Users\\USUARIO\\Downloads\\desktop_background.jpg"));
+            // Carga la imagen desde el classpath (src/resources)
+            Image backgroundImg = new Image(
+                    getClass().getResourceAsStream("/resources/desktop_background.jpg")
+            );
+
             BackgroundImage backgroundImage = new BackgroundImage(
                     backgroundImg,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,
-                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true)
+                    new BackgroundSize(
+                            BackgroundSize.AUTO,
+                            BackgroundSize.AUTO,
+                            false, false, true, true
+                    )
             );
+
             root.setBackground(new Background(backgroundImage));
+
         } catch (Exception e) {
             System.out.println("[ERROR] No se pudo cargar la imagen de fondo. Usando color negro.");
             root.setStyle("-fx-background-color: black;");
@@ -178,11 +229,95 @@ public class EscenaPrincipal {
         // --- Crear escena ---
         Scene scene = new Scene(root, 1024, 600);
 
-        Platform.runLater(() -> input.requestFocus());
-        // --- Inicializar lógica del juego ---
         inicializarJuego();
-
         return scene;
+    }
+
+    private void escribirConsola(String texto, double velocidadMs) {
+        if (texto == null || texto.isEmpty()) {
+            return;
+        }
+
+        colaMensajes.offer(texto);
+        if (!escribiendo) {
+            procesarCola(velocidadMs);
+        }
+    }
+
+    private void procesarCola(double velocidadMs) {
+        if (colaMensajes.isEmpty()) {
+            escribiendo = false;
+            return;
+        }
+
+        escribiendo = true;
+        String texto = colaMensajes.poll();
+
+        Timeline timeline = new Timeline();
+        final int[] idx = {0};
+
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(velocidadMs), e -> {
+            if (idx[0] < texto.length()) {
+                char c = texto.charAt(idx[0]);
+
+                // --- Antes de agregar texto: limpieza inteligente ---
+                if (contarLineasConsola() == lineasMaximasConsola) {
+                    limpiarConBuffer();
+                }
+
+                consola.appendText(String.valueOf(c));
+
+                // --- Sonido de tecleo ---
+                if (typeSound != null && !Character.isWhitespace(c)) {
+                    typeSound.play();
+                }
+
+                idx[0]++;
+            }
+        }));
+
+        timeline.setCycleCount(texto.length());
+        timeline.setOnFinished(e -> {
+            PauseTransition pausa = new PauseTransition(Duration.millis(80));
+            pausa.setOnFinished(ev -> procesarCola(velocidadMs));
+            pausa.play();
+        });
+
+        timeline.play();
+    }
+
+    /**
+     * Limpia solo el texto más viejo, conservando las últimas líneas
+     * importantes.
+     */
+    private void limpiarConBuffer() {
+        String[] lineas = consola.getText().split("\n");
+        if (lineas.length <= BUFFER_LINEAS_RECIENTES) {
+            return;
+        }
+        StringBuilder nuevoTexto = new StringBuilder("");
+        for (int i = Math.max(0, lineas.length - BUFFER_LINEAS_RECIENTES); i < lineas.length; i++) {
+            nuevoTexto.append(lineas[i]).append("\n");
+        }
+        consola.clear();
+        consola.appendText(nuevoTexto.toString());
+
+        consola.clear();
+    }
+
+    /**
+     * Cuenta las líneas actuales en la consola
+     */
+    private int contarLineasConsola() {
+        return consola.getText().split("\n").length;
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     private void inicializarJuego() {
@@ -192,24 +327,52 @@ public class EscenaPrincipal {
 
             GeneradorArbol gen = new GeneradorArbol();
             List<Nodo> lista = bancoN.getNodos();
-            raiz = gen.construirArbol(lista);
-            actual = raiz;
+
+            arbol = gen.construirArbol(lista);
+            actual = arbol.getRaiz();
+
+            if (lista.size() > 1) {
+                Nodo ultimo = lista.remove(lista.size() - 1);
+                lista.add(ultimo); // lo mantenemos al final, para colocarlo al fondo
+            }
 
             bienvenida();
             calcularPosicionesArbol();
-            dibujarMiniMapa();
             mostrarNodoActualYPreguntar();
 
         } catch (Exception ex) {
-            consola.appendText("[ERROR] No fue posible cargar recursos: " + ex.getMessage() + "\n");
-            ex.printStackTrace();
+            escribirConsola("[ERROR] No fue posible cargar recursos: " + ex.getMessage() + "\n", 50.0);
         }
     }
 
-    private void bienvenida() {
-        consola.appendText("¡Bienvenido a la Aventura Cibernética!\n");
-        consola.appendText("Tu misión: recuperar el control de la red y detener el ataque.\n");
-        consola.appendText("Comandos: 'izquierda', 'derecha', 'salir'. Responde las preguntas para avanzar.\n\n");
+    public void bienvenida() {
+        String mensaje = """       
+        *** INICIANDO SIMULACIÓN DE INCIDENTE CIBERNÉTICO ***
+        Año 2043. La corporación tecnológica NEONet ha sido víctima de un ciberataque masivo. 
+        Un grupo de hackers desconocidos ha infiltrado la red principal, desplegando un malware 
+        autoadaptativo capaz de comprometer servidores, interceptar datos y reescribir protocolos internos.
+        Eres un Analista Forense Digital de la Unidad de Respuesta Inmediata (URI). 
+        Tu misión es acceder al sistema comprometido, identificar los nodos afectados 
+        y restaurar el control antes de que el malware alcance el núcleo de seguridad.                         
+        Cada nodo representa un servidor o dispositivo dentro de la red corporativa. 
+        Algunos están limpios, otros comprometidos, y unos pocos contienen rastros del atacante. 
+        Tendrás que responder correctamente los desafíos de ciberseguridad para poder avanzar 
+        y reestablecer el equilibrio en la red.
+        Ten cuidado: las decisiones incorrectas pueden bloquear rutas o activar contramedidas.  
+        El tiempo corre y la integridad del sistema se deteriora con cada segundo.
+                                          
+            > Ejecuta tus comandos con precisión.
+            > Observa los patrones.
+            > Protege el núcleo.
+                         
+                         *** SISTEMA: Acceso concedido... Conectando al entorno virtual... ***                 
+        ¡Bienvenido a la Aventura Cibernética!
+        Tu misión: recuperar el control de la red y detener el ataque.
+        Comandos: 'izquierda', 'derecha', 'salir'. 
+        Responde las preguntas para avanzar.
+
+        """;
+        escribirConsola(mensaje, 50); // velocidad de escritura (ms por caracter)
     }
 
     // -------------------------
@@ -229,7 +392,7 @@ public class EscenaPrincipal {
 
         String cmd = texto.trim().toLowerCase();
         if (cmd.equals("salir")) {
-            consola.appendText("Saliendo... ¡Hasta la próxima!\n");
+            escribirConsola("Saliendo... ¡Hasta la próxima!\n", 50);
             System.exit(0);
             return;
         }
@@ -237,11 +400,11 @@ public class EscenaPrincipal {
         if (cmd.equals("izquierda") || cmd.equals("izq")) {
             if (actual.getIzquierda() != null) {
                 actual = actual.getIzquierda();
-                consola.appendText("-> Te desplazas a la izquierda.\n\n");
-                dibujarMiniMapa();
+                escribirConsola("-> Te desplazas a la izquierda.\n\n", 50);
+
                 mostrarNodoActualYPreguntar();
             } else {
-                consola.appendText("No hay nodo a la izquierda. Intenta otra opción.\n");
+                escribirConsola("No hay nodo a la izquierda. Intenta otra opción.\n", 50);
             }
             return;
         }
@@ -249,11 +412,11 @@ public class EscenaPrincipal {
         if (cmd.equals("derecha") || cmd.equals("der")) {
             if (actual.getDerecha() != null) {
                 actual = actual.getDerecha();
-                consola.appendText("-> Te desplazas a la derecha.\n\n");
-                dibujarMiniMapa();
+                escribirConsola("-> Te desplazas a la derecha.\n\n", 50);
+
                 mostrarNodoActualYPreguntar();
             } else {
-                consola.appendText("No hay nodo a la derecha. Intenta otra opción.\n");
+                escribirConsola("No hay nodo a la derecha. Intenta otra opción.\n", 50);
             }
             return;
         }
@@ -263,24 +426,24 @@ public class EscenaPrincipal {
                 Nodo padre = actual.getPadre();
                 if (padre != null) {
                     actual = padre;
-                    consola.appendText("↩️  Regresaste al nodo anterior: " + actual.getNodo() + "\n\n");
-                    dibujarMiniMapa();
+                    escribirConsola("↩️  Regresaste al nodo anterior: " + actual.getNodo() + "\n\n", 50);
+
                     mostrarNodoActualYPreguntar();
                 } else {
-                    consola.appendText("No puedes volver, estás en la raíz.\n");
+                    escribirConsola("No puedes volver, estás en la raíz.\n", 50);
                 }
             } catch (Exception e) {
-                consola.appendText("No se pudo ejecutar 'volver' (verifica que Nodo tenga getPadre()).\n");
+                escribirConsola("No se pudo ejecutar 'volver' (verifica que Nodo tenga getPadre()).\n", 50);
             }
             return;
         }
 
-        consola.appendText("Comando no reconocido. Usa izquierda | derecha | volver | salir\n");
+        escribirConsola("Comando no reconocido. Usa izquierda | derecha | volver | salir\n", 50);
     }
 
     private void comprobarRespuesta(String texto) {
         if (preguntaActual == null) {
-            consola.appendText("No hay pregunta activa. Cambiando a modo comando.\n");
+            escribirConsola("No hay pregunta activa. Cambiando a modo comando.\n", 50);
             mode = Mode.COMANDO;
             return;
         }
@@ -307,10 +470,10 @@ public class EscenaPrincipal {
         }
 
         if (acerto) {
-            consola.appendText("¡Correcto! Ahora puedes elegir 'izquierda' o 'derecha'.\n\n");
+            escribirConsola("¡Correcto! Ahora puedes elegir 'izquierda' o 'derecha', o volver.\n\n", 50);
             mode = Mode.COMANDO;
         } else {
-            consola.appendText("Incorrecto. Intenta otra respuesta para este mismo reto.\n\n");
+            escribirConsola("Incorrecto. Intenta otra respuesta para este mismo reto.\n\n", 50);
             lanzarPreguntaLocal(true); // Vuelve a mostrar la misma pregunta
         }
     }
@@ -320,37 +483,49 @@ public class EscenaPrincipal {
     // -------------------------
     private void mostrarNodoActualYPreguntar() {
         if (actual == null) {
-            consola.appendText("> Nodo actual: null\n");
+            escribirConsola("> Nodo actual: null\n", 50);
             mode = Mode.COMANDO;
             return;
         }
-
-        consola.appendText("> Estás en: " + actual.getNodo() + "\n");
 
         String nombre = actual.getNodo() == null ? "" : actual.getNodo().toLowerCase();
+        escribirConsola("> Estás en: " + nombre + "\n", 50);
 
-        if (nombre.contains("comprometido") || nombre.contains("infectado") || nombre.contains("infiltrada") || nombre.contains("malware")) {
-            consola.appendText("\n⚠️ Nodo comprometido detectado ⚠️\n");
-            consola.appendText("Mostrando pista (esquema parcial).\n");
-            consola.appendText("Usa esta pista para encontrar el Nodo Central Seguro.\n\n");
+        // --- Nodo comprometido ---
+        if (nombre.contains("comprometido") || nombre.contains("infectado")
+                || nombre.contains("infiltrada") || nombre.contains("malware")) {
+
+            mostrarAlerta("⚠️ Nodo Comprometido",
+                    "Has detectado un nodo comprometido.\nUtiliza tus conocimientos para restaurar la seguridad.",
+                    AlertType.WARNING);
+
+            miniWrapper.setVisible(true); // mostrar el mini-mapa
             dibujarMiniMapa();
-        }
-
-        if (nombre.equals("nodo central seguro") || nombre.contains("central seguro")) {
-            consola.appendText("\n🎉 ¡Felicitaciones! Has asegurado el Nodo Central Seguro.\n");
-            consola.appendText("Escribe 'salir' para terminar o 'volver' para explorar más.\n\n");
+        } // --- Nodo central seguro ---
+        else if (nombre.contains("central seguro")) {
+            miniWrapper.setVisible(false);
+            mostrarAlerta("🎉 Victoria",
+                    "¡Has asegurado el Nodo Central Seguro!\nLa red vuelve a estar protegida.",
+                    AlertType.INFORMATION);
+            mode = Mode.COMANDO;
+            
+            
+            
+            return;
+        } // --- Nodo aislado ---
+        else if (actual.getIzquierda() == null && actual.getDerecha() == null) {
+            miniWrapper.setVisible(false);
+            mostrarAlerta("Nodo Aislado",
+                    "Este nodo está aislado. No hay rutas desde aquí.\nUsa 'volver' para retroceder.",
+                    AlertType.INFORMATION);
             mode = Mode.COMANDO;
             return;
+        } // --- Nodo normal ---
+        else {
+            miniWrapper.setVisible(false); //ocultar el mapa si no está comprometido
         }
 
-        if (actual.getIzquierda() == null && actual.getDerecha() == null) {
-            consola.appendText("\n🔒 Este nodo está aislado. No hay rutas desde aquí.\n");
-            consola.appendText("Escribe 'volver' para regresar al nodo anterior o 'salir' para terminar.\n\n");
-            mode = Mode.COMANDO;
-            return;
-        }
-
-        lanzarPreguntaLocal(true); // Lanza una nueva pregunta
+        lanzarPreguntaLocal(true);
     }
 
     private void lanzarPreguntaLocal(boolean nuevaPregunta) {
@@ -360,25 +535,25 @@ public class EscenaPrincipal {
             }
 
             if (preguntaActual == null) {
-                consola.appendText("[INFO] No hay preguntas disponibles. Avanza libremente.\n");
+                escribirConsola("[INFO] No hay preguntas disponibles. Avanza libremente.\n", 50);
                 mode = Mode.COMANDO;
                 return;
             }
 
-            consola.appendText("\n--- Reto de Ciberseguridad ---\n");
-            consola.appendText(preguntaActual.getPregunta() + "\n");
+            escribirConsola("\n--- Reto de Ciberseguridad ---\n", 50);
+            escribirConsola(preguntaActual.getPregunta() + "\n", canvasWidth);
             List<String> opts = preguntaActual.getOpciones();
             if (opts != null && !opts.isEmpty()) {
                 for (int i = 0; i < opts.size(); i++) {
-                    consola.appendText("  " + (i + 1) + ") " + opts.get(i) + "\n");
+                    escribirConsola(opts.get(i) + "\n", 50);
                 }
-                consola.appendText("Responde escribiendo el número o el texto de la opción.\n\n");
+                escribirConsola("Responde escribiendo la letra correspondiente a la opción.\n\n", 50);
             } else {
-                consola.appendText("Responde escribiendo la respuesta.\n\n");
+                escribirConsola("Responde escribiendo la respuesta.\n\n", 50);
             }
             mode = Mode.RESPONDIENDO;
         } catch (Exception e) {
-            consola.appendText("[ERROR] No se pudo obtener pregunta: " + e.getMessage() + "\n");
+            escribirConsola("[ERROR] No se pudo obtener pregunta: " + e.getMessage() + "\n", canvasWidth);
             mode = Mode.COMANDO;
         }
     }
@@ -389,16 +564,16 @@ public class EscenaPrincipal {
     private void calcularPosicionesArbol() {
         nodePositions.clear();
         Map<Integer, List<Nodo>> depthMap = new HashMap<>();
-        int maxDepth = fillDepthMap(raiz, 0, depthMap);
+        int maxDepth = fillDepthMap(arbol.getRaiz(), 0, depthMap);
         Map<Nodo, Integer> inorderIndex = new HashMap<>();
         int[] counter = {0};
-        inorderAssign(raiz, inorderIndex, counter);
+        inorderAssign(arbol.getRaiz(), inorderIndex, counter);
 
         int maxIndex = counter[0] == 0 ? 1 : counter[0];
         for (Map.Entry<Nodo, Integer> e : inorderIndex.entrySet()) {
             Nodo node = e.getKey();
             int idx = e.getValue();
-            int depth = depthOfNode(raiz, node, 0);
+            int depth = depthOfNode(arbol.getRaiz(), node, 0);
             double x = 20 + ((double) idx / (maxIndex)) * (canvasWidth - 40);
             double y = 20 + ((double) depth / (Math.max(1, maxDepth))) * (canvasHeight - 40);
             nodePositions.put(node, new Point2D(x, y));

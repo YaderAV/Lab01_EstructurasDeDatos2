@@ -32,6 +32,7 @@ public class Main extends Application {
 
         SceneManager.show("menu");
         stage.setTitle("Aventura Cibernética");
+        SceneManager.setPantallaCompleta(SceneManager.getPantallaCompleta());
         stage.show();
     }
 

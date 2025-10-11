@@ -28,9 +28,18 @@ public class SceneManager {
 
     private static final Duration FADE_DURATION = Duration.millis(500);
     private static final Duration FLASH_DURATION = Duration.millis(200);
+    private static boolean pantallaCompleta= false;
 
-    
-;
+    public static void setPantallaCompleta(boolean estado){
+        pantallaCompleta = estado; 
+        if (mainStage != null) {
+            mainStage.setFullScreen(pantallaCompleta);
+        }
+        
+    }
+    public static boolean getPantallaCompleta(){
+        return pantallaCompleta;
+    }
     public static void setStage(Stage stage) {
         mainStage = stage;
     }

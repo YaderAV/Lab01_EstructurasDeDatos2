@@ -48,12 +48,12 @@ public class EscenaAboutUs {
                 de una red comprometida navegando entre nodos críticos.
                 
                 Integrantes:
-                - Integrante 1
-                - Integrante 2
-                - Integrante 3
-                - Integrante 4
+                - Yader Vega Sabogal
+                - David Roa Aníbal
+                - Mateo Pugliese Viloria
+                - Andrés Ruíz
                 
-                Universidad XYZ - 2025
+                Universidad Del Norte - 2025
         """);
         description.setFont(Font.font(FONT_FAMILY, 16));
         description.setFill(Color.WHITE);
@@ -65,7 +65,7 @@ public class EscenaAboutUs {
         backButton.setOnAction(e -> {
         Scene menu = new EscenaMenu().crearEscena();
             SceneManager.addScene("menu", menu);
-            SceneManager.show("menu");
+            SceneManager.show("menu"); 
         });
 
         content.getChildren().addAll(title, description, backButton);
@@ -74,7 +74,7 @@ public class EscenaAboutUs {
 
         return new Scene(root, 1280, 720);
     }
-
+    
     private static Button createButton(String text, FontAwesomeIcon icon) {
         FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
         iconView.setSize("18px");

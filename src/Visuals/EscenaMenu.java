@@ -37,6 +37,7 @@ public class EscenaMenu {
     private static final String FONT_FAMILY = "Consolas";
     private static final String THEME_COLOR = "#00b8ff"; // Un cian brillante
     private static final Color THEME_COLOR_PAINT = Color.web(THEME_COLOR);
+    private static boolean pantallaCompleta;
 
     public static Scene crearEscena() {
         BorderPane root = new BorderPane();
@@ -99,7 +100,10 @@ public class EscenaMenu {
             SceneManager.addScene("juego", juego);
             SceneManager.show("juego");
         });
-        btnAdmin.setOnAction(e -> SceneManager.show("about"));
+        btnAdmin.setOnAction(e -> {
+        SceneManager.show("about");
+        SceneManager.setPantallaCompleta(SceneManager.getPantallaCompleta());
+        });
         btnSettings.setOnAction(e -> SceneManager.show("settings"));
         btnShutdown.setOnAction(e -> {
             Stage stage = SceneManager.getStage();
@@ -171,6 +175,8 @@ public class EscenaMenu {
 
         return button;
     }
+    
+   
 
     /**
      * Helper para crear un botón solo con un ícono grande

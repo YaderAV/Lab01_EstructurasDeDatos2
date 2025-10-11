@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  *
@@ -26,6 +25,7 @@ public class EscenaAjustes {
     private static final String FONT_FAMILY = "Consolas";
     private static final String THEME_COLOR = "#00b8ff";
     private static final Color THEME_COLOR_PAINT = Color.web(THEME_COLOR);
+    private static boolean pantallaCompleta;
 
     public static Scene crearEscena() {
         BorderPane root = new BorderPane();
@@ -41,10 +41,8 @@ public class EscenaAjustes {
 
         Button fullScreenBtn = crearBoton("TOGGLE FULLSCREEN", FontAwesomeIcon.DESKTOP);
         fullScreenBtn.setOnAction(e -> {
-            Stage stage = SceneManager.getStage();
-            if (stage != null) {
-                stage.setFullScreen(!stage.isFullScreen());
-            }
+           boolean nuevoEstado = !SceneManager.getPantallaCompleta();
+           SceneManager.setPantallaCompleta(nuevoEstado);
         });
 
         Button backBtn = crearBoton("BACK TO MENU", FontAwesomeIcon.ARROW_LEFT);
@@ -59,7 +57,7 @@ public class EscenaAjustes {
 
         return new Scene(root, 1280, 720);
     }
-
+    
     private static Button crearBoton(String texto, FontAwesomeIcon icono) {
         FontAwesomeIconView iconView = new FontAwesomeIconView(icono);
         iconView.setSize("20px");

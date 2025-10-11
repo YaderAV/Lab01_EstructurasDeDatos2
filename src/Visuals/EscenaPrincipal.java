@@ -11,21 +11,17 @@ import Models.GeneradorArbol;
 import Models.Nodo;
 import Models.Pregunta;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,7 +44,6 @@ import javafx.scene.text.Font;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
-import javafx.util.Duration;
 
 /**
  *
@@ -65,6 +60,9 @@ public class EscenaPrincipal {
     // cantidad máxima de líneas visibles antes de limpiar
     private static final int lineasMaximasConsola = 19;
     private static final int BUFFER_LINEAS_RECIENTES = 10; // Líneas a conservar tras limpiar
+    
+     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
 
     // Lógica del juego
     private final Queue<String> colaMensajes = new LinkedList<>();
@@ -89,6 +87,8 @@ public class EscenaPrincipal {
         RESPONDIENDO, COMANDO
     }
     private Mode mode = Mode.COMANDO;
+    
+    
 
     public Scene crearEscena() {
         consola = new TextArea();
@@ -108,6 +108,8 @@ public class EscenaPrincipal {
         consola.textProperty().addListener((obs, oldVal, newVal)
                 -> consola.setScrollTop(Double.MAX_VALUE)
         );
+        
+        
 
         input = new TextField();
         input.setPromptText(">");
@@ -232,8 +234,8 @@ public class EscenaPrincipal {
         inicializarJuego();
         return scene;
     }
-
-    private void escribirConsola(String texto, double velocidadMs) {
+    
+   /* private void escribirConsola(String texto, double velocidadMs) {
         if (texto == null || texto.isEmpty()) {
             return;
         }
@@ -242,8 +244,8 @@ public class EscenaPrincipal {
         if (!escribiendo) {
             procesarCola(velocidadMs);
         }
-    }
-
+    }*/
+/*
     private void procesarCola(double velocidadMs) {
         if (colaMensajes.isEmpty()) {
             escribiendo = false;
@@ -284,7 +286,7 @@ public class EscenaPrincipal {
         });
 
         timeline.play();
-    }
+    }*/
 
     /**
      * Limpia solo el texto más viejo, conservando las últimas líneas
@@ -341,7 +343,7 @@ public class EscenaPrincipal {
             mostrarNodoActualYPreguntar();
 
         } catch (Exception ex) {
-            escribirConsola("[ERROR] No fue posible cargar recursos: " + ex.getMessage() + "\n", 50.0);
+            consola.appendText("[ERROR] No fue posible cargar recursos: " + ex.getMessage() + "\n");
         }
     }
 
@@ -372,7 +374,7 @@ public class EscenaPrincipal {
         Responde las preguntas para avanzar.
 
         """;
-        escribirConsola(mensaje, 50); // velocidad de escritura (ms por caracter)
+        consola.appendText(mensaje); // velocidad de escritura (ms por caracter)
     }
 
     // -------------------------
@@ -392,7 +394,7 @@ public class EscenaPrincipal {
 
         String cmd = texto.trim().toLowerCase();
         if (cmd.equals("salir")) {
-            escribirConsola("Saliendo... ¡Hasta la próxima!\n", 50);
+            consola.appendText("Saliendo... ¡Hasta la próxima!\n");
             System.exit(0);
             return;
         }
@@ -400,11 +402,11 @@ public class EscenaPrincipal {
         if (cmd.equals("izquierda") || cmd.equals("izq")) {
             if (actual.getIzquierda() != null) {
                 actual = actual.getIzquierda();
-                escribirConsola("-> Te desplazas a la izquierda.\n\n", 50);
+                consola.appendText("-> Te desplazas a la izquierda.\n\n");
 
                 mostrarNodoActualYPreguntar();
             } else {
-                escribirConsola("No hay nodo a la izquierda. Intenta otra opción.\n", 50);
+                consola.appendText("No hay nodo a la izquierda. Intenta otra opción.\n");
             }
             return;
         }
@@ -412,11 +414,11 @@ public class EscenaPrincipal {
         if (cmd.equals("derecha") || cmd.equals("der")) {
             if (actual.getDerecha() != null) {
                 actual = actual.getDerecha();
-                escribirConsola("-> Te desplazas a la derecha.\n\n", 50);
+                consola.appendText("-> Te desplazas a la derecha.\n\n");
 
                 mostrarNodoActualYPreguntar();
             } else {
-                escribirConsola("No hay nodo a la derecha. Intenta otra opción.\n", 50);
+                consola.appendText("No hay nodo a la derecha. Intenta otra opción.\n");
             }
             return;
         }
@@ -426,24 +428,24 @@ public class EscenaPrincipal {
                 Nodo padre = actual.getPadre();
                 if (padre != null) {
                     actual = padre;
-                    escribirConsola("↩️  Regresaste al nodo anterior: " + actual.getNodo() + "\n\n", 50);
+                    consola.appendText("↩️  Regresaste al nodo anterior: " + actual.getNodo() + "\n\n");
 
                     mostrarNodoActualYPreguntar();
                 } else {
-                    escribirConsola("No puedes volver, estás en la raíz.\n", 50);
+                    consola.appendText("No puedes volver, estás en la raíz.\n");
                 }
             } catch (Exception e) {
-                escribirConsola("No se pudo ejecutar 'volver' (verifica que Nodo tenga getPadre()).\n", 50);
+                consola.appendText("No se pudo ejecutar 'volver' (verifica que Nodo tenga getPadre()).\n");
             }
             return;
         }
 
-        escribirConsola("Comando no reconocido. Usa izquierda | derecha | volver | salir\n", 50);
+        consola.appendText("Comando no reconocido. Usa izquierda | derecha | volver | salir\n");
     }
 
     private void comprobarRespuesta(String texto) {
         if (preguntaActual == null) {
-            escribirConsola("No hay pregunta activa. Cambiando a modo comando.\n", 50);
+            consola.appendText("No hay pregunta activa. Cambiando a modo comando.\n");
             mode = Mode.COMANDO;
             return;
         }
@@ -470,10 +472,10 @@ public class EscenaPrincipal {
         }
 
         if (acerto) {
-            escribirConsola("¡Correcto! Ahora puedes elegir 'izquierda' o 'derecha', o volver.\n\n", 50);
+            consola.appendText("¡Correcto! Ahora puedes elegir 'izquierda' o 'derecha', o volver.\n\n");
             mode = Mode.COMANDO;
         } else {
-            escribirConsola("Incorrecto. Intenta otra respuesta para este mismo reto.\n\n", 50);
+            consola.appendText("Incorrecto. Intenta otra respuesta para este mismo reto.\n\n");
             lanzarPreguntaLocal(true); // Vuelve a mostrar la misma pregunta
         }
     }
@@ -483,13 +485,13 @@ public class EscenaPrincipal {
     // -------------------------
     private void mostrarNodoActualYPreguntar() {
         if (actual == null) {
-            escribirConsola("> Nodo actual: null\n", 50);
+            consola.appendText("> Nodo actual: null\n");
             mode = Mode.COMANDO;
             return;
         }
 
         String nombre = actual.getNodo() == null ? "" : actual.getNodo().toLowerCase();
-        escribirConsola("> Estás en: " + nombre + "\n", 50);
+        consola.appendText("> Estás en: " + nombre + "\n");
 
         // --- Nodo comprometido ---
         if (nombre.contains("comprometido") || nombre.contains("infectado")
@@ -535,25 +537,25 @@ public class EscenaPrincipal {
             }
 
             if (preguntaActual == null) {
-                escribirConsola("[INFO] No hay preguntas disponibles. Avanza libremente.\n", 50);
+                consola.appendText("[INFO] No hay preguntas disponibles. Avanza libremente.\n");
                 mode = Mode.COMANDO;
                 return;
             }
 
-            escribirConsola("\n--- Reto de Ciberseguridad ---\n", 50);
-            escribirConsola(preguntaActual.getPregunta() + "\n", canvasWidth);
+            consola.appendText("\n--- Reto de Ciberseguridad ---\n");
+            consola.appendText(preguntaActual.getPregunta() + "\n");
             List<String> opts = preguntaActual.getOpciones();
             if (opts != null && !opts.isEmpty()) {
                 for (int i = 0; i < opts.size(); i++) {
-                    escribirConsola(opts.get(i) + "\n", 50);
+                    consola.appendText(opts.get(i) + "\n");
                 }
-                escribirConsola("Responde escribiendo la letra correspondiente a la opción.\n\n", 50);
+                consola.appendText("Responde escribiendo la letra correspondiente a la opción.\n\n");
             } else {
-                escribirConsola("Responde escribiendo la respuesta.\n\n", 50);
+                consola.appendText("Responde escribiendo la respuesta.\n\n");
             }
             mode = Mode.RESPONDIENDO;
         } catch (Exception e) {
-            escribirConsola("[ERROR] No se pudo obtener pregunta: " + e.getMessage() + "\n", canvasWidth);
+            consola.appendText("[ERROR] No se pudo obtener pregunta: " + e.getMessage() + "\n");
             mode = Mode.COMANDO;
         }
     }
